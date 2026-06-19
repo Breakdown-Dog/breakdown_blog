@@ -1,33 +1,35 @@
 <template>
-  <div class="article-list container">
-    <h1 class="page-title">所有文章</h1>
+  <div class="posts container">
+    <p class="page-label">{{ t('postsLabel') }}</p>
+    <h1 class="page-title">{{ t('postsTitle') }}</h1>
 
-    <div class="filter-bar">
+    <div class="filters">
       <button
         v-for="tag in allTags"
         :key="tag"
         :class="['filter-btn', { active: activeTag === tag }]"
         @click="activeTag = tag"
       >
-        {{ tag }}
+        {{ tag === '全部' && locale === 'en' ? t('all') : tag }}
       </button>
     </div>
 
-    <div v-if="filtered.length === 0" class="empty">暂无文章</div>
+    <div v-if="allArticles.length === 0" class="empty">{{ t('noPostsYet') }}</div>
+    <div v-else-if="filtered.length === 0" class="empty">{{ t('noPosts') }}</div>
 
-    <div v-else class="list">
+    <div v-else class="entry-list">
       <article
         v-for="article in filtered"
         :key="article.slug"
-        class="list-card"
+        class="entry-item"
       >
-        <router-link :to="`/articles/${article.slug}`" class="list-card-link">
-          <div class="list-card-meta">
-            <span class="list-card-tag">{{ article.tag }}</span>
-            <time class="list-card-date">{{ article.date }}</time>
+        <router-link :to="`/articles/${article.slug}`" class="entry-link">
+          <div class="entry-meta">
+            <time class="entry-date">{{ article.date }}</time>
+            <span class="tag-pill">{{ article.tag }}</span>
           </div>
-          <h2 class="list-card-title">{{ article.title }}</h2>
-          <p class="list-card-desc">{{ article.description }}</p>
+          <h2 class="entry-title">{{ article.title }}</h2>
+          <p class="entry-desc">{{ article.description }}</p>
         </router-link>
       </article>
     </div>
@@ -37,7 +39,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { getArticles } from '@/articles/loader'
+import { useI18n } from '@/i18n'
 
+const { locale, t } = useI18n()
 const allArticles = ref([])
 const activeTag = ref('全部')
 
@@ -57,109 +61,104 @@ const filtered = computed(() => {
 </script>
 
 <style scoped>
-.article-list {
-  padding: 3rem 1.5rem;
+.posts {
+  padding: 3rem 1.5rem 2rem;
+}
+
+.page-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.05em;
 }
 
 .page-title {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
   margin-bottom: 1.5rem;
 }
 
-.filter-bar {
+.filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem 0.8rem;
   margin-bottom: 2rem;
 }
 
 .filter-btn {
-  padding: 0.4rem 1rem;
+  background: none;
+  border: none;
+  padding: 0;
   font-size: 0.85rem;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  background: var(--bg-card);
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
+  font-family: inherit;
+  transition: color 0.2s;
 }
 
 .filter-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  color: #fff;
 }
 
 .filter-btn.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.entry-list {
+  list-style: none;
 }
 
-.list-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  transition: box-shadow 0.2s, transform 0.15s;
+.entry-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.list-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
+.entry-item:first-child {
+  padding-top: 0;
 }
 
-.list-card-link {
+.entry-link {
   display: block;
-  padding: 1.5rem;
   text-decoration: none;
   color: inherit;
 }
 
-.list-card-meta {
+.entry-meta {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
 
-.list-card-tag {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #eff6ff;
-  color: #2563eb;
-  border-radius: 4px;
-}
-
-.list-card-date {
+.entry-date {
   font-size: 0.8rem;
   color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
 }
 
-.list-card-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 0.4rem;
-  color: var(--text);
+.entry-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #fff;
+  transition: color 0.2s;
+  line-height: 1.4;
 }
 
-.list-card-desc {
-  font-size: 0.9rem;
+.entry-link:hover .entry-title {
+  color: var(--accent);
+}
+
+.entry-desc {
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  margin-top: 0.2rem;
+  line-height: 1.5;
 }
 
 .empty {
-  text-align: center;
-  padding: 4rem 0;
   color: var(--text-secondary);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
+  padding: 2rem 0;
 }
 </style>

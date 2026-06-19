@@ -1,15 +1,16 @@
 <template>
   <div id="blog-app">
+    <AuroraBackground />
     <header class="site-header">
       <div class="container header-inner">
-        <router-link to="/" class="logo">
-          <span class="logo-icon">B</span>
-          <span class="logo-text">Breakdown Blog</span>
-        </router-link>
-        <nav class="nav-links">
-          <router-link to="/" class="nav-link" exact-active-class="active">首页</router-link>
-          <router-link to="/articles" class="nav-link" active-class="active">文章</router-link>
-        </nav>
+        <router-link to="/" class="logo">Breakdown Blog</router-link>
+        <div class="header-right">
+          <nav class="nav-links">
+            <router-link to="/" class="nav-link" exact-active-class="active">{{ t('navHome') }}</router-link>
+            <router-link to="/articles" class="nav-link" active-class="active">{{ t('navPosts') }}</router-link>
+          </nav>
+          <button class="lang-toggle" @click="toggleLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
+        </div>
       </div>
     </header>
 
@@ -19,25 +20,29 @@
 
     <footer class="site-footer">
       <div class="container">
-        <p>&copy; {{ year }} Breakdown Blog — 专注于技术深度解析</p>
+        <p>Breakdown Blog &mdash; {{ year }}</p>
       </div>
     </footer>
   </div>
 </template>
 
 <script setup>
+import AuroraBackground from '@/components/AuroraBackground.vue'
+import { useI18n } from '@/i18n'
+
+const { locale, setLocale, t } = useI18n()
 const year = new Date().getFullYear()
+
+function toggleLang() {
+  setLocale(locale.value === 'zh' ? 'en' : 'zh')
+}
 </script>
 
 <style scoped>
 .site-header {
-  background: #1a1a2e;
-  color: #fff;
-  padding: 1rem 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem 0;
+  position: relative;
+  z-index: 2;
 }
 
 .header-inner {
@@ -47,26 +52,17 @@ const year = new Date().getFullYear()
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 600;
   color: #fff;
-  font-weight: 700;
-  font-size: 1.25rem;
+  text-decoration: none;
+  letter-spacing: 0.01em;
 }
 
-.logo-icon {
-  display: inline-flex;
+.header-right {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: 800;
+  gap: 1.2rem;
 }
 
 .nav-links {
@@ -75,9 +71,9 @@ const year = new Date().getFullYear()
 }
 
 .nav-link {
-  color: #cbd5e1;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.95rem;
   transition: color 0.2s;
 }
 
@@ -86,15 +82,38 @@ const year = new Date().getFullYear()
   color: #fff;
 }
 
+.lang-toggle {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1.4;
+}
+
+.lang-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
 .main-content {
-  min-height: calc(100vh - 130px);
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 140px);
+  padding-bottom: 3rem;
 }
 
 .site-footer {
-  background: #1a1a2e;
-  color: #94a3b8;
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0;
   text-align: center;
-  padding: 1.5rem 0;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
 }
 </style>
