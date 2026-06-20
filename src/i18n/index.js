@@ -40,7 +40,7 @@ const messages = {
 }
 
 const state = reactive({
-  locale: 'zh',
+  locale: 'en',
 })
 
 function setLocale(locale) {
