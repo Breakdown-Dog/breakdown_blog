@@ -1,7 +1,7 @@
 <template>
   <div class="posts container">
-    <p class="page-label">{{ t('postsLabel') }}</p>
-    <h1 class="page-title">{{ t('postsTitle') }}</h1>
+    <p class="page-label">{{ t('renderingLabel') }}</p>
+    <h1 class="page-title">{{ t('renderingTitle') }}</h1>
 
     <div class="filters">
       <button

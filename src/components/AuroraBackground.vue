@@ -162,6 +162,7 @@ onMounted(() => {
   position: relative;
   color: #fff;
   opacity: 0.55;
+  filter: blur(4px);
   text-shadow:
     0 0 5px #fff,
     0 0 15px rgba(255, 255, 255, 0.5),
