@@ -1,13 +1,13 @@
 <template>
   <div id="blog-app">
-    <AuroraBackground />
+    <AuroraBackground v-if="!isReading" />
     <header class="site-header">
       <div class="container header-inner">
         <router-link to="/" class="logo">Breakdown Blog</router-link>
         <div class="header-right">
           <nav class="nav-links">
             <router-link to="/" class="nav-link" exact-active-class="active">{{ t('navHome') }}</router-link>
-            <router-link to="/articles" class="nav-link" active-class="active">{{ t('navRendering') }}</router-link>
+            <router-link to="/articles" class="nav-link" active-class="active">{{ t('navPosts') }}</router-link>
           </nav>
           <button class="lang-toggle" @click="toggleLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
         </div>
@@ -29,13 +29,27 @@
 <script setup>
 import AuroraBackground from '@/components/AuroraBackground.vue'
 import { useI18n } from '@/i18n'
+import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted } from 'vue'
 
 const { locale, setLocale, t } = useI18n()
+const route = useRoute()
+const router = useRouter()
 const year = new Date().getFullYear()
+
+const isReading = computed(() => route.name === 'ArticleDetail')
 
 function toggleLang() {
   setLocale(locale.value === 'zh' ? 'en' : 'zh')
 }
+
+onMounted(() => {
+  const redirect = sessionStorage.getItem('redirect')
+  if (redirect) {
+    sessionStorage.removeItem('redirect')
+    router.replace(redirect.replace('/breakdown_blog', ''))
+  }
+})
 </script>
 
 <style scoped>

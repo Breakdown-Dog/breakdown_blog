@@ -24,7 +24,7 @@ const messages = {
     navRendering: 'Rendering',
     about: '/about',
     homeTitle: 'All Posts',
-    homeDesc: 'A tech blog with breakdowns—no fluff, no filler.',
+    homeDesc: 'A tech blog with breakdowns.',
     recent: '/recent',
     viewAll: 'view all →',
     renderingLabel: '/rendering',
