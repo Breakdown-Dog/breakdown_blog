@@ -5,7 +5,7 @@ import ArticleDetail from '@/views/ArticleDetail.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
-  { path: '/articles', name: 'ArticleList', component: RenderingList },
+  { path: '/rendering', name: 'RenderingList', component: RenderingList },
   { path: '/articles/:slug', name: 'ArticleDetail', component: ArticleDetail },
 ]
 
