@@ -37,17 +37,21 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { getArticles } from '@/articles/loader'
+import { ref, computed, onMounted, watch } from 'vue'
+import { getArticlesByColumn } from '@/articles/loader'
 import { useI18n } from '@/i18n'
 
 const { locale, t } = useI18n()
 const allArticles = ref([])
 const activeTag = ref('全部')
 
-onMounted(async () => {
-  allArticles.value = await getArticles()
-})
+async function loadArticles() {
+  allArticles.value = await getArticlesByColumn(locale.value, 'rendering')
+  activeTag.value = '全部'
+}
+
+onMounted(loadArticles)
+watch(locale, loadArticles)
 
 const allTags = computed(() => {
   const tags = new Set(allArticles.value.map((a) => a.tag))

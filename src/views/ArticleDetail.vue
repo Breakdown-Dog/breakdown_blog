@@ -21,14 +21,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { Marked } from 'marked'
 import hljs from 'highlight.js'
 import { getArticle } from '@/articles/loader'
 import { useI18n } from '@/i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const route = useRoute()
 const article = ref(null)
 const loading = ref(true)
@@ -52,10 +52,12 @@ const renderedContent = computed(() => {
   return marked.parse(article.value.content)
 })
 
-onMounted(async () => {
+async function loadArticle() {
+  loading.value = true
+  error.value = null
   try {
     const slug = route.params.slug
-    article.value = await getArticle(slug)
+    article.value = await getArticle(slug, locale.value)
     if (!article.value) {
       error.value = t('notFound')
     }
@@ -64,7 +66,10 @@ onMounted(async () => {
   } finally {
     loading.value = false
   }
-})
+}
+
+onMounted(loadArticle)
+watch(locale, loadArticle)
 </script>
 
 <style scoped>

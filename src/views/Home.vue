@@ -19,6 +19,7 @@
             <div class="entry-meta">
               <time class="entry-date">{{ article.date }}</time>
               <span class="tag-pill">{{ article.tag }}</span>
+              <span class="column-pill">{{ article.column }}</span>
             </div>
             <h2 class="entry-title">{{ article.title }}</h2>
             <p class="entry-desc">{{ article.description }}</p>
@@ -27,24 +28,24 @@
       </div>
     </section>
 
-    <div class="container">
-      <router-link to="/articles" class="view-all">{{ t('viewAll') }}</router-link>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { getArticles } from '@/articles/loader'
 import { useI18n } from '@/i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const recentArticles = ref([])
 
-onMounted(async () => {
-  const all = await getArticles()
+async function loadArticles() {
+  const all = await getArticles(locale.value)
   recentArticles.value = all.slice(0, 5)
-})
+}
+
+onMounted(loadArticles)
+watch(locale, loadArticles)
 </script>
 
 <style scoped>
@@ -135,6 +136,15 @@ onMounted(async () => {
   color: var(--text-secondary);
   margin-top: 0.2rem;
   line-height: 1.5;
+}
+
+.column-pill {
+  font-size: 0.7rem;
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.12);
+  padding: 0.08rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
 }
 
 .view-all {

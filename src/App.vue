@@ -8,6 +8,7 @@
           <nav class="nav-links">
             <router-link to="/" class="nav-link" exact-active-class="active">{{ t('navHome') }}</router-link>
             <router-link to="/rendering" class="nav-link" active-class="active">{{ t('navRendering') }}</router-link>
+            <router-link to="/game" class="nav-link" active-class="active">{{ t('navGame') }}</router-link>
           </nav>
           <button class="lang-toggle" @click="toggleLang">{{ locale === 'zh' ? 'EN' : '中' }}</button>
         </div>
